@@ -10,24 +10,49 @@ public interface IShortUrlRepository
     Task<long> CreateAsync(ShortUrl shortUrl);
 }
 
-public class ShortUrlRepository(IConfiguration config) : IShortUrlRepository
+public class ShortUrlRepository(NpgsqlDataSource dataSource) : IShortUrlRepository
 {
-    private readonly string _connectionString = config.GetConnectionString("Default")!;
-
     public async Task<long> CreateAsync(ShortUrl shortUrl)
     {
-        await using var conn = new NpgsqlConnection(_connectionString);
-        const string sql = @"
-            INSERT INTO short_urls (long_url, created_at)
-            VALUES (@long_url, created_at)
-            RETURNING id";
-        return await conn.QuerySingleAsync<long>(sql, shortUrl);
+        await using var conn = await dataSource.OpenConnectionAsync();
+        await using var tx = await conn.BeginTransactionAsync();
+
+        // code is NOT NULL and is Base62(id), so it cannot be known until the row exists.
+        // A placeholder outside the Base62 alphabet satisfies the constraint until the id is known.
+        var id = await conn.QuerySingleAsync<long>(
+            """
+            INSERT INTO short_urls (code, long_url, created_at)
+            VALUES (@Code, @LongUrl, @CreatedAt)
+            RETURNING id
+            """,
+            new
+            {
+                Code = NewPlaceholderCode(),
+                shortUrl.LongUrl,
+                shortUrl.CreatedAt
+            },
+            tx);
+
+        await conn.ExecuteAsync(
+            "UPDATE short_urls SET code = @Code WHERE id = @Id",
+            new { Code = Base62.Encode(id), Id = id },
+            tx);
+
+        await tx.CommitAsync();
+        return id;
     }
 
     public async Task<ShortUrl?> GetByCodeAsync(string code)
     {
-        await using var conn = new NpgsqlConnection(_connectionString);
+        await using var conn = await dataSource.OpenConnectionAsync();
         return await conn.QueryFirstOrDefaultAsync<ShortUrl>(
-            @"SELECT * FROM short_urls WHERE code = @code", new { Code = code });
+            """
+            SELECT long_url AS LongUrl, created_at AS CreatedAt
+            FROM short_urls
+            WHERE code = @Code
+            """,
+            new { Code = code });
     }
+
+    private static string NewPlaceholderCode() => $"_{Guid.NewGuid():N}"[..10];
 }

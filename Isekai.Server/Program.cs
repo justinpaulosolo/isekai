@@ -14,6 +14,7 @@ builder.AddNpgsqlDataSource("postgresdb");
 
 builder.Services.AddScoped<IShortUrlRepository, ShortUrlRepository>();
 builder.Services.AddScoped<UrlShortenerService>();
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
