@@ -12,6 +12,7 @@ publish/
 aspire-manifest.json
 
 # Visual Studio
+.vscode/*
 .vs/
 *.rsuser
 *.suo
