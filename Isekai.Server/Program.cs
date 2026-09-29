@@ -14,6 +14,8 @@ builder.AddNpgsqlDataSource("postgresdb");
 
 builder.AddRedisClient(connectionName: "cache");
 
+builder.AddRabbitMQClient(connectionName: "messaging");
+
 builder.Services.AddScoped<IShortUrlRepository, ShortUrlRepository>();
 builder.Services.AddScoped<UrlShortenerService>();
 
