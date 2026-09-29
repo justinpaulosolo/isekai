@@ -1,0 +1,30 @@
+# Build outputs. Aspire DLLs (Aspire.*.dll and the AppHost bundle) land here.
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+artifacts/
+publish/
+
+# .NET Aspire
+**/.aspire/
+**/Aspire*.dll
+aspire-manifest.json
+
+# Visual Studio
+.vs/
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# JetBrains Rider / IntelliJ
+.idea/
+*.sln.iml
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
