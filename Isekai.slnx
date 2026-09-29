@@ -5,4 +5,5 @@
   </Project>
   <Project Path="Isekai.AppHost/Isekai.AppHost.csproj" />
   <Project Path="Isekai.Server/Isekai.Server.csproj" />
+  <Project Path="Isekai.Worker/Isekai.Worker.csproj" />
 </Solution>

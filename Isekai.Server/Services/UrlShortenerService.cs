@@ -1,10 +1,13 @@
-﻿using Isekai.Server.Models;
+﻿using System.Text;
+using System.Text.Json;
+using Isekai.Server.Models;
 using Isekai.Server.Repositories;
+using RabbitMQ.Client;
 using StackExchange.Redis;
 
 namespace Isekai.Server.Services;
 
-public class UrlShortenerService(IShortUrlRepository repository, IConnectionMultiplexer connectionMux)
+public class UrlShortenerService(IShortUrlRepository repository, IConnectionMultiplexer connectionMux, IConnection connection)
 {
 
     public async Task<string> ShortenUrl(string url, string? title = null)
@@ -20,6 +23,36 @@ public class UrlShortenerService(IShortUrlRepository repository, IConnectionMult
 
     public async Task<string?> ResolveAsync(string code)
     {
+        await using var channel = await connection.CreateChannelAsync();
+        await channel.QueueDeclareAsync(
+            queue: "click",
+            durable: true,
+            exclusive: false,
+            autoDelete: false);
+        var eventId = Guid.NewGuid().ToString("N");
+
+        var json = JsonSerializer.Serialize(new
+        {
+            eventId,
+            code,
+            occurredOn = DateTime.UtcNow
+        });
+        
+        var body = Encoding.UTF8.GetBytes(json);
+        var props = new BasicProperties
+        {
+            ContentType = "application/json",
+            DeliveryMode = DeliveryModes.Persistent,
+            MessageId = eventId,
+        };
+        
+        await channel.BasicPublishAsync(
+            exchange:"",
+            routingKey: "clicks",
+            mandatory: false,
+            basicProperties: props,
+            body: body);
+        
         var db = connectionMux.GetDatabase();
         var cacheKey = $"url:{code}";
         var lockKey = $"lock:url:{code}";
