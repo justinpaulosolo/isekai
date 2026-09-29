@@ -12,9 +12,10 @@ builder.Services.AddControllers();
 
 builder.AddNpgsqlDataSource("postgresdb");
 
+builder.AddRedisClient(connectionName: "cache");
+
 builder.Services.AddScoped<IShortUrlRepository, ShortUrlRepository>();
 builder.Services.AddScoped<UrlShortenerService>();
-builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

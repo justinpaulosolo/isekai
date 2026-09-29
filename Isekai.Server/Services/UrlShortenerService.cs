@@ -1,10 +1,10 @@
 ﻿using Isekai.Server.Models;
 using Isekai.Server.Repositories;
-using Microsoft.Extensions.Caching.Memory;
+using StackExchange.Redis;
 
 namespace Isekai.Server.Services;
 
-public class UrlShortenerService(IShortUrlRepository repository, IMemoryCache  memoryCache)
+public class UrlShortenerService(IShortUrlRepository repository, IConnectionMultiplexer connectionMux)
 {
 
     public async Task<string> ShortenUrl(string url)
@@ -15,16 +15,17 @@ public class UrlShortenerService(IShortUrlRepository repository, IMemoryCache  m
 
     public async Task<string?> ResolveAsync(string code)
     {
-        if (memoryCache.TryGetValue(code, out string? longUrl))
-            return longUrl;
+        var db = connectionMux.GetDatabase();
+        
+        var cached = await db.StringGetAsync(code);
+        
+        if (!cached.IsNullOrEmpty)
+            return cached;
         
         var shortUrl = await repository.GetByCodeAsync(code);
         if (shortUrl is null) return null;
         
-        memoryCache.Set(code, shortUrl.LongUrl, new MemoryCacheEntryOptions
-        {
-            SlidingExpiration = TimeSpan.FromMinutes(60)
-        });
+        await db.StringSetAsync(code, shortUrl.LongUrl, TimeSpan.FromHours(1));
         
         return shortUrl.LongUrl;
     }
