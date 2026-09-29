@@ -17,7 +17,20 @@ builder.AddRedisClient(connectionName: "cache");
 builder.Services.AddScoped<IShortUrlRepository, ShortUrlRepository>();
 builder.Services.AddScoped<UrlShortenerService>();
 
+// TODO: Add CORS policy to allow requests from the frontend applicationP
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 var connectionString = builder.Configuration.GetConnectionString("postgresdb")
     ?? throw new InvalidOperationException("Connection string 'postgresdb' not found.");

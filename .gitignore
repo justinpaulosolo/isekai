@@ -12,6 +12,7 @@ publish/
 aspire-manifest.json
 
 # Visual Studio
+.vscode/*
 .vs/
 *.rsuser
 *.suo
@@ -28,3 +29,6 @@ aspire-manifest.json
 # OS
 .DS_Store
 Thumbs.db
+
+#
+frontend/obj
