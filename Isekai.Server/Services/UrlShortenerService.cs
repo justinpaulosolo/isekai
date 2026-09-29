@@ -16,17 +16,47 @@ public class UrlShortenerService(IShortUrlRepository repository, IConnectionMult
     public async Task<string?> ResolveAsync(string code)
     {
         var db = connectionMux.GetDatabase();
+        var cacheKey = $"url:{code}";
+        var lockKey = $"lock:url:{code}";
         
         var cached = await db.StringGetAsync(code);
-        
         if (!cached.IsNullOrEmpty)
             return cached;
         
-        var shortUrl = await repository.GetByCodeAsync(code);
-        if (shortUrl is null) return null;
+        var lockToken = Guid.NewGuid().ToString("N");
+        var gotLock = await db.LockTakeAsync(lockKey, lockToken, TimeSpan.FromSeconds(5));
+
+        if (gotLock)
+        {
+            try
+            {
+                cached = await db.StringGetAsync(cacheKey);
+                if (!cached.IsNullOrEmpty)
+                    return cached;
+                
+                var shortUrl = await repository.GetByCodeAsync(code);
+                if (shortUrl is null)
+                    return null;
         
-        await db.StringSetAsync(code, shortUrl.LongUrl, TimeSpan.FromHours(1));
-        
-        return shortUrl.LongUrl;
+                await db.StringSetAsync(cacheKey, shortUrl.LongUrl, TimeSpan.FromHours(1));
+                return shortUrl.LongUrl;
+
+            }
+            finally
+            {
+                await db.LockReleaseAsync(lockKey, lockToken);
+            }
+        }
+
+        for (var attempt = 0; attempt < 5; attempt++)
+        {
+            await Task.Delay(50);
+            cached = await db.StringGetAsync(cacheKey);
+            if (!cached.IsNullOrEmpty)
+                return cached;
+        }
+
+        var fallback = await repository.GetByCodeAsync(code);
+        return fallback?.LongUrl;
     }
 }
