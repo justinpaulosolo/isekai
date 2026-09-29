@@ -5,11 +5,15 @@ var postgresdb = postgres.AddDatabase("postgresdb");
 
 var cache = builder.AddRedis("cache");
 
+var rabbitmq = builder.AddRabbitMQ("messaging");
+
 var server = builder.AddProject<Projects.Isekai_Server>("server")
     .WithReference(postgresdb)
     .WaitFor(postgresdb)
     .WithReference(cache)
     .WaitFor(cache)
+    .WithReference(rabbitmq)
+    .WaitFor(rabbitmq)
     .WithHttpHealthCheck("/health")
     .WithExternalHttpEndpoints();
 

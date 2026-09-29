@@ -11,6 +11,7 @@ import './App.css';
 
 function App() {
   const [longUrl, setLongUrl] = useState<string>('https://www.shorturl.at/');
+  const [title, setTitle] = useState<string>('');
   // useEffect(() => {}, []);
 
   const onShortenClick = async () => {
@@ -19,6 +20,7 @@ function App() {
     console.log(longUrl);
     const payload = {
       url: longUrl,
+      title: title.trim() || null,
     };
 
     try {
@@ -53,11 +55,20 @@ function App() {
       {/* Need to change to url */}
       <input
         type="url"
-        placeholder="Primary"
+        placeholder="https://example.com"
         className="input input-primary"
         name="longUrl"
         value={longUrl}
         onChange={(e) => setLongUrl(e.currentTarget.value)}
+      />
+
+      <input
+        type="text"
+        placeholder="Title (optional)"
+        className="input input-primary"
+        name="title"
+        value={title}
+        onChange={(e) => setTitle(e.currentTarget.value)}
       />
 
       <button className="btn btn-outline btn-primary" onClick={onShortenClick}>
