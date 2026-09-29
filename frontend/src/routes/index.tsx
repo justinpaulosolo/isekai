@@ -7,7 +7,6 @@ export const Route = createFileRoute('/')({
 
 function Index() {
   const [longUrl, setLongUrl] = useState<string>('https://www.shorturl.at/');
-
   const navigate = useNavigate();
 
   const onShortenClick = async () => {
@@ -58,7 +57,7 @@ function Index() {
       {/* Need to change to url */}
       <input
         type="url"
-        placeholder="Primary"
+        placeholder="https://example.com"
         className="input input-primary"
         name="longUrl"
         value={longUrl}
