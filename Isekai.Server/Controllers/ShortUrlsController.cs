@@ -12,7 +12,7 @@ public class ShortUrlsController(UrlShortenerService urlShortenerService) : Cont
     [HttpPost]
     public async Task<IActionResult> CreateShortUrl([FromBody] ShortenRequest shortenRequest)
     {
-        var code = await urlShortenerService.ShortenUrl(shortenRequest.Url);
+        var code = await urlShortenerService.ShortenUrl(shortenRequest.Url, shortenRequest.Title);
         return Ok(new ShortenResponse(code, $"{Request.Scheme}://{Request.Host}/{code}"));
     }
 
