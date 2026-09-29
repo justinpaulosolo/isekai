@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-obj/
+obj/*
 
 # Editor directories and files
 .vscode/*
