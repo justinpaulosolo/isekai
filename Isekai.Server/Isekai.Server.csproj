@@ -25,4 +25,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Scripts\*.sql" />
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Isekai.Data\Isekai.Data.csproj" />
+  </ItemGroup>
 </Project>

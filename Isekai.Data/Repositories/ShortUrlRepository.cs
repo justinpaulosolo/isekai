@@ -1,8 +1,9 @@
 ﻿using Dapper;
+using Isekai.Server;
 using Isekai.Server.Models;
 using Npgsql;
 
-namespace Isekai.Server.Repositories;
+namespace Isekai.Data.Repositories;
 
 public interface IShortUrlRepository
 {

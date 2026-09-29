@@ -1,7 +1,8 @@
 ﻿using System.Text;
 using System.Text.Json;
+using Isekai.Data;
+using Isekai.Data.Repositories;
 using Isekai.Server.Models;
-using Isekai.Server.Repositories;
 using RabbitMQ.Client;
 using StackExchange.Redis;
 
