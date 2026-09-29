@@ -19,7 +19,7 @@ public class UrlShortenerService(IShortUrlRepository repository, IConnectionMult
         var cacheKey = $"url:{code}";
         var lockKey = $"lock:url:{code}";
         
-        var cached = await db.StringGetAsync(code);
+        var cached = await db.StringGetAsync(cacheKey);
         if (!cached.IsNullOrEmpty)
             return cached;
         
@@ -58,5 +58,12 @@ public class UrlShortenerService(IShortUrlRepository repository, IConnectionMult
 
         var fallback = await repository.GetByCodeAsync(code);
         return fallback?.LongUrl;
+    }
+    
+    public async Task DeleteAsync(string code)
+    {
+        await repository.DeleteAsync(code);
+        var db = connectionMux.GetDatabase();
+        await db.KeyDeleteAsync($"url:{code}");
     }
 }

@@ -8,12 +8,18 @@ namespace Isekai.Server.Controllers;
 [Route("api/shorturls")]
 public class ShortUrlsController(UrlShortenerService urlShortenerService) : ControllerBase
 {
-    private readonly UrlShortenerService _urlShortenerService =  urlShortenerService;
 
     [HttpPost]
     public async Task<IActionResult> CreateShortUrl([FromBody] ShortenRequest shortenRequest)
     {
-        var code = await _urlShortenerService.ShortenUrl(shortenRequest.Url);
+        var code = await urlShortenerService.ShortenUrl(shortenRequest.Url);
         return Ok(new ShortenResponse(code, $"{Request.Scheme}://{Request.Host}/{code}"));
+    }
+
+    [HttpDelete("{code}")]
+    public async Task<IActionResult> DeleteShortUrl(string code)
+    {
+        await urlShortenerService.DeleteAsync(code);
+        return NoContent();
     }
 }
