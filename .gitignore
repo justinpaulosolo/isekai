@@ -29,3 +29,6 @@ aspire-manifest.json
 # OS
 .DS_Store
 Thumbs.db
+
+#
+frontend/obj
