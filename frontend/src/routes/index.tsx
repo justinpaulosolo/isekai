@@ -1,22 +1,16 @@
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
-// import aspireLogo from '/Aspire.png';
-import './App.css';
 
-// interface WeatherForecast {
-//   date: string;
-//   temperatureC: number;
-//   temperatureF: number;
-//   summary: string;
-// }
+export const Route = createFileRoute('/')({
+  component: Index,
+});
 
-function App() {
+function Index() {
   const [longUrl, setLongUrl] = useState<string>('https://www.shorturl.at/');
-  // useEffect(() => {}, []);
+
+  const navigate = useNavigate();
 
   const onShortenClick = async () => {
-    // event.preventDefault();
-
-    console.log(longUrl);
     const payload = {
       url: longUrl,
     };
@@ -38,7 +32,9 @@ function App() {
       }
 
       const result = await res.json();
-      console.log('Success:', result);
+      // console.log('Success:', result);
+
+      navigate({ to: '/shortener', state: { ...result } });
     } catch (error) {
       console.error(error);
     }
@@ -47,8 +43,17 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <h1 className="text-3xl font-bold underline">Short!</h1>
+    <div className="">
+      {/*  */}
+
+      <p>Modern & Blazing Fast Link Shortener</p>
+
+      <h1 className="">Short links, boundless reach.</h1>
+
+      <p>
+        Fast, secure, and modern link shortening with real-time analytics and
+        instant edge routing.
+      </p>
 
       {/* Need to change to url */}
       <input
@@ -59,19 +64,13 @@ function App() {
         value={longUrl}
         onChange={(e) => setLongUrl(e.currentTarget.value)}
       />
-
       <button className="btn btn-outline btn-primary" onClick={onShortenClick}>
-        Shorten
+        Shorten URL
       </button>
-      {/* 
-      <a href="/shortennnn" target="_blank" rel="noopener noreferrer">
-        HERE
-      </a>
-      <a className="link link-primary" href="/shortennnn">
-        HERE
-      </a> */}
+
+      <p>
+        URL shortener allows to create a shortened link making it easy to share
+      </p>
     </div>
   );
 }
-
-export default App;
