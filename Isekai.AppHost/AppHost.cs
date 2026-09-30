@@ -17,7 +17,7 @@ var server = builder.AddProject<Projects.Isekai_Server>("server")
     .WithHttpHealthCheck("/health")
     .WithExternalHttpEndpoints();
 
-var webfrontend = builder.AddViteApp("webfrontend", "../frontend")
+var webfrontend = builder.AddViteApp("webfrontend", "../frontend", "pnpm")
     .WithReference(server)
     .WaitFor(server);
 
