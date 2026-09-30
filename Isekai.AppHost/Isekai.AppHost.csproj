@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Isekai.Server\Isekai.Server.csproj" />
+    <ProjectReference Include="..\Isekai.Worker\Isekai.Worker.csproj" />
   </ItemGroup>
 
   <ItemGroup>
