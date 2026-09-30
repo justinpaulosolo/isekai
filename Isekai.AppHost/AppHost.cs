@@ -23,7 +23,7 @@ var worker = builder.AddProject<Projects.Isekai_Worker>("worker")
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq);
 
-var webfrontend = builder.AddViteApp("webfrontend", "../frontend")
+var webfrontend = builder.AddViteApp("webfrontend", "../frontend", "pnpm")
     .WithReference(server)
     .WaitFor(server);
 
