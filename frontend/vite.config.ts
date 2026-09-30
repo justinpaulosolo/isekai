@@ -19,6 +19,8 @@ export default defineConfig({
       '/api': {
         target: process.env.SERVER_HTTPS || process.env.SERVER_HTTP,
         changeOrigin: true,
+        // Aspire's dev cert is not in Node's default trust store.
+        secure: false,
       },
     },
   },
