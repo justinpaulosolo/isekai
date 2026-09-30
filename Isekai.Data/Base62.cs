@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace Isekai.Server;
+namespace Isekai.Data;
 
 public static class Base62
 {

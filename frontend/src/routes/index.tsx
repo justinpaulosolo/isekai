@@ -15,9 +15,7 @@ function Index() {
     };
 
     try {
-      const res = await fetch(
-        'https://server-isekai.dev.localhost:7342/api/shorturls',
-        {
+      const res = await fetch('/api/shorturls', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

@@ -17,6 +17,12 @@ var server = builder.AddProject<Projects.Isekai_Server>("server")
     .WithHttpHealthCheck("/health")
     .WithExternalHttpEndpoints();
 
+var worker = builder.AddProject<Projects.Isekai_Worker>("worker")
+    .WithReference(postgresdb)
+    .WaitFor(postgresdb)
+    .WithReference(rabbitmq)
+    .WaitFor(rabbitmq);
+
 var webfrontend = builder.AddViteApp("webfrontend", "../frontend")
     .WithReference(server)
     .WaitFor(server);
