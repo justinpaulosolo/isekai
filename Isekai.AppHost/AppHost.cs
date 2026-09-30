@@ -15,9 +15,11 @@ var server = builder.AddProject<Projects.Isekai_Server>("server")
     .WithReference(rabbitmq)
     .WaitFor(rabbitmq)
     .WithHttpHealthCheck("/health")
-    .WithExternalHttpEndpoints();
+    .WithExternalHttpEndpoints()
+    .WithEndpoint("http",  e => e.Port = 5304)
+    .WithEndpoint("https", e => e.Port = 7342);
 
-var worker = builder.AddProject<Projects.Isekai_Worker>("worker")
+builder.AddProject<Projects.Isekai_Worker>("worker")
     .WithReference(postgresdb)
     .WaitFor(postgresdb)
     .WithReference(rabbitmq)
@@ -26,7 +28,9 @@ var worker = builder.AddProject<Projects.Isekai_Worker>("worker")
 var webfrontend = builder.AddViteApp("webfrontend", "../frontend")
     .WithPnpm()
     .WithReference(server)
-    .WaitFor(server);
+    .WaitFor(server)      .WithEnvironment("SERVER_HTTP", server.GetEndpoint("http"))
+    .WithEnvironment("SERVER_HTTPS", server.GetEndpoint("https"))
+    .WithEndpoint("http", e => e.Port = 5173);
 
 server.PublishWithContainerFiles(webfrontend, "wwwroot");
 

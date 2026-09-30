@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UserSecretsId>3f3c3930-aaf8-490c-86f1-154d5d755989</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +13,9 @@
     <PackageReference Include="Aspire.StackExchange.Redis" Version="13.5.4" />
     <PackageReference Include="Dapper" Version="2.1.89" />
     <PackageReference Include="dbup-postgresql" Version="7.0.1" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.77.0" />
+    <PackageReference Include="Google.Apis.Auth.AspNetCore3" Version="1.77.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="10.0.12" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.11" />
     <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="10.8.0" />
     <PackageReference Include="Microsoft.Extensions.ServiceDiscovery" Version="10.8.0" />

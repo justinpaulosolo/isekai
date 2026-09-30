@@ -2,7 +2,7 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
-
+const target = process.env.SERVER_HTTP || process.env.SERVER_HTTPS;
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -14,14 +14,11 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
+    port: parseInt(process.env.PORT ?? '5173'),     // keep in sync with AppHost + Google console
+    strictPort: true,
     proxy: {
-      // Proxy API calls to the app service
-      '/api': {
-        target: process.env.SERVER_HTTPS || process.env.SERVER_HTTP,
-        changeOrigin: true,
-        // Aspire's dev cert is not in Node's default trust store.
-        secure: false,
-      },
+      '/api':           { target, secure: false, xfwd: true }, // no changeOrigin
+      '/signin-google': { target, secure: false, xfwd: true },
     },
   },
 });
