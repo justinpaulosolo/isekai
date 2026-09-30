@@ -2,13 +2,14 @@
 using Isekai.Server.Models;
 using Npgsql;
 
-namespace Isekai.Server.Repositories;
+namespace Isekai.Data.Repositories;
 
 public interface IShortUrlRepository
 {
     Task<ShortUrl?> GetByCodeAsync(string code);
     Task<long> CreateAsync(ShortUrl shortUrl);
     Task DeleteAsync(string code);
+    Task RecordClickAsync(string code, DateTime occurredOn);
 }
 
 public class ShortUrlRepository(NpgsqlDataSource dataSource) : IShortUrlRepository
@@ -67,6 +68,17 @@ public class ShortUrlRepository(NpgsqlDataSource dataSource) : IShortUrlReposito
             "DELETE FROM short_urls WHERE code = @Code",
             new { Code = code }
             );
+    }
+
+    public async Task RecordClickAsync (string code, DateTime occurredOn)
+    {
+        await using var conn = await dataSource.OpenConnectionAsync();
+        await conn.ExecuteAsync(
+            """
+            UPDATE short_urls
+            SET click_count = click_count + 1, last_clicked_at = @OccurredOn
+            WHERE code = @Code
+            """, new { Code = code, OccurredOn = occurredOn });
     }
 
     private static string NewPlaceholderCode() => $"_{Guid.NewGuid():N}"[..10];

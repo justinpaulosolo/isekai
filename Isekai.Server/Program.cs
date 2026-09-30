@@ -1,5 +1,5 @@
 using DbUp;
-using Isekai.Server.Repositories;
+using Isekai.Data.Repositories;
 using Isekai.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
