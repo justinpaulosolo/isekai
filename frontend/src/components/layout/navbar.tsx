@@ -1,8 +1,10 @@
+import { Link } from '@tanstack/react-router';
+
 import logo from '../../assets/screen.png';
 
 export function Navbar() {
   return (
-    <div className="navbar shadow-sm">
+    <div className="navbar bg-base-100 backdrop-blur-md backdrop-filter border-b border-zinc-800/80 px-10">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -28,62 +30,83 @@ export function Navbar() {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
           >
             <li>
-              <a>Item 1</a>
+              <a>Features</a>
             </li>
+
             <li>
-              <a>Parent</a>
-              <ul className="p-2">
-                <li>
-                  <a>Submenu 1</a>
-                </li>
-                <li>
-                  <a>Submenu 2</a>
-                </li>
-              </ul>
+              <a>Analytics</a>
             </li>
+
             <li>
-              <a>Item 3</a>
+              <a>Pricing</a>
+            </li>
+
+            <li>
+              <a>API</a>
+            </li>
+
+            <li>
+              <a>GitHub</a>
             </li>
           </ul>
         </div>
 
-        <img src={logo} alt="" className="w-8 me-1" />
-        <a className="text-xl">SnapLink</a>
+        <Link to="/" className="text-xl flex me-2 text-white">
+          <img src={logo} alt="" className="w-8 me-1" />
+          SnapLink
+        </Link>
+        <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium bg-base-300 text-sky-400 border border-slate-50/20 rounded-full backdrop-blur-sm font-mono">
+          v0.0.1
+        </div>
       </div>
 
       {/* Nav Center */}
       <div className="navbar-center hidden lg:flex">
-        <ul className="menu menu-horizontal px-1">
+        <ul className="menu menu-horizontal px-1 ">
           <li>
-            <a>Features</a>
+            <Link to="/" className="nav-link">
+              Features
+            </Link>
           </li>
 
           <li>
-            <a>Analytics</a>
+            <Link to="/" className="nav-link">
+              Analytics
+            </Link>
           </li>
 
           <li>
-            <a>Pricing</a>
+            <Link to="/" className="nav-link">
+              Pricing
+            </Link>
           </li>
 
           <li>
-            <a>API</a>
+            <Link to="/" className="nav-link">
+              API
+            </Link>
           </li>
 
           <li>
-            <a>GitHub</a>
+            <Link to="/" className="nav-link">
+              GitHub
+            </Link>
           </li>
         </ul>
       </div>
 
       {/* Nav End */}
-      <div className="navbar-end gap-3">
-        <a className="">Sign In</a>
+      <div className="navbar-end gap-5">
+        <Link to="/" className="nav-link">
+          Sign In
+        </Link>
 
         <a className="btn bg-indigo-500 hover:bg-indigo-300 text-indigo-950">
           Get Started Free
         </a>
 
+        {/* This could be implemented later if we have user data */}
+        {/* 
         <div className="flex gap-2">
           <div className="dropdown dropdown-end">
             <div
@@ -116,7 +139,7 @@ export function Navbar() {
               </li>
             </ul>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
