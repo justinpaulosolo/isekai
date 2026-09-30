@@ -1,10 +1,17 @@
 using System.Text;
+using System.Text.Json;
+using Isekai.Data;
+using Isekai.Data.Repositories;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace Isekai.Worker;
 
-public class Worker(ILogger<Worker> logger, IConnection connection) : BackgroundService
+public class Worker(
+    ILogger<Worker> logger,
+    IConnection connection,
+    IShortUrlRepository shortUrlRepository
+    ) : BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -19,8 +26,8 @@ public class Worker(ILogger<Worker> logger, IConnection connection) : Background
             stoppingToken);
 
         await channel.BasicQosAsync(
-            prefetchSize: 1,
-            prefetchCount: 0,
+            prefetchSize: 0,
+            prefetchCount: 1,
             global: false,
             cancellationToken: stoppingToken);
 
@@ -30,6 +37,14 @@ public class Worker(ILogger<Worker> logger, IConnection connection) : Background
             try
             {
                 var json = Encoding.UTF8.GetString(delivery.Body.Span);
+                
+                var click = JsonSerializer.Deserialize<ClickEvent>(
+                                delivery.Body.Span,
+                                new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
+                            ?? throw new InvalidOperationException("Click message was empty.");
+                
+                await shortUrlRepository.RecordClickAsync(click.Code, click.OccurredOn);
+                
                 await channel.BasicAckAsync(delivery.DeliveryTag, false, stoppingToken);
             }
             catch (Exception e)

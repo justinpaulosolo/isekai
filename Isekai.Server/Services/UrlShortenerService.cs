@@ -31,7 +31,7 @@ public class UrlShortenerService(IShortUrlRepository repository, IConnectionMult
             exclusive: false,
             autoDelete: false);
         var eventId = Guid.NewGuid().ToString("N");
-
+        
         var json = JsonSerializer.Serialize(new
         {
             eventId,
@@ -49,7 +49,7 @@ public class UrlShortenerService(IShortUrlRepository repository, IConnectionMult
         
         await channel.BasicPublishAsync(
             exchange:"",
-            routingKey: "clicks",
+            routingKey: "click",
             mandatory: false,
             basicProperties: props,
             body: body);
