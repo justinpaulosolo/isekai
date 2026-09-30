@@ -6,7 +6,7 @@ import { Navbar } from '../components/layout/navbar';
 import '../index.css';
 
 const RootLayout = () => (
-  <div className="">
+  <div className="font-inter">
     <Navbar />
     {/* <div className="">
       <Link to="/" className="">

@@ -42,12 +42,16 @@ function Index() {
   };
 
   return (
-    <div className="">
+    <div className="w-2/5 mx-auto text-center mt-10">
       {/*  */}
 
-      <p>Modern & Blazing Fast Link Shortener</p>
+      <p className="text-sky-500 font-mono">
+        Modern & Blazing Fast Link Shortener
+      </p>
 
-      <h1 className="">Short links, boundless reach.</h1>
+      <h1 className="text-6xl font-bold font-jakarta">
+        Short links, boundless reach.
+      </h1>
 
       <p>
         Fast, secure, and modern link shortening with real-time analytics and
