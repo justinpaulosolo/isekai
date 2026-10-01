@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using DbUp;
 using Isekai.Data.Repositories;
 using Isekai.Server.Services;
@@ -60,11 +61,23 @@ builder.Services.AddAuthentication(options =>
     //options.CorrelationCookie.SameSite = SameSiteMode.Lax;
     //options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
 
-    options.Events.OnCreatingTicket = context =>
+    options.Events.OnCreatingTicket = async context =>
     {
-        // Optional: look up/create your user by ctx.Principal NameIdentifier
-        // and add role claims here.
-        return Task.CompletedTask;
+        var provider = context.Scheme.Name;  // "Google", "GitHub", ...
+        var subject  = context.Principal!.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        var name     = context.Principal.FindFirstValue(ClaimTypes.Name);
+        var email    = context.Principal.FindFirstValue(ClaimTypes.Email);
+
+        var svc = context.HttpContext.RequestServices.GetRequiredService<IAccountService>();
+        var userId = await svc.GetOrCreateUserAsync(provider.ToLowerInvariant(), subject, name, email);
+
+        // Replace the principal with one carrying YOUR id
+        var identity = new ClaimsIdentity(
+            new[] { new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                new Claim(ClaimTypes.Name, name ?? "") },
+            CookieAuthenticationDefaults.AuthenticationScheme);
+
+        context.Principal = new ClaimsPrincipal(identity);
     };
 });
 
@@ -80,8 +93,10 @@ builder.AddRedisClient(connectionName: "cache");
 
 builder.AddRabbitMQClient(connectionName: "messaging");
 
-builder.Services.AddScoped<IShortUrlRepository, ShortUrlRepository>();
-builder.Services.AddScoped<UrlShortenerService>();
+builder.Services.AddSingleton<IShortUrlRepository, ShortUrlRepository>();
+builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
+builder.Services.AddSingleton<UrlShortenerService>();
+builder.Services.AddSingleton<IAccountService, AccountService>();
 
 var app = builder.Build();
 
