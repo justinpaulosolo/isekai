@@ -105,4 +105,9 @@ public class UrlShortenerService(IShortUrlRepository repository, IConnectionMult
         var db = connectionMux.GetDatabase();
         await db.KeyDeleteAsync($"url:{code}");
     }
+
+    public async Task<List<ShortUrl>> GetAllShortUrls(long userId)
+    {
+        return [.. await repository.GetAllAsync(userId)];
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using Isekai.Data;
 using Isekai.Data.Repositories;
+using Isekai.Server.Models;
 
 namespace Isekai.Server.Services;
 

@@ -2,6 +2,7 @@ using System.Security.Claims;
 using DbUp;
 using Isekai.Data.Repositories;
 using Isekai.Server.Services;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.HttpOverrides;
 
@@ -49,6 +50,7 @@ builder.Services.AddAuthentication(options =>
 {
     options.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? throw new InvalidOperationException();
     options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? throw new InvalidOperationException();
+    options.ClaimActions.MapJsonKey("picture", "picture");
     
     // TODO: Research AddGoogle vs AddGoogleOpenIdConnect
     // Default response_mode is form_post: a cross-site POST from Google. SameSite=Lax
@@ -74,7 +76,9 @@ builder.Services.AddAuthentication(options =>
         // Replace the principal with one carrying YOUR id
         var identity = new ClaimsIdentity(
             new[] { new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                new Claim(ClaimTypes.Name, name ?? "") },
+                new Claim(ClaimTypes.Name, name ?? ""),
+                new Claim(ClaimTypes.Email, email ?? ""),
+            }, 
             CookieAuthenticationDefaults.AuthenticationScheme);
 
         context.Principal = new ClaimsPrincipal(identity);
