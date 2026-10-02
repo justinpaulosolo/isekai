@@ -7,6 +7,7 @@ namespace Isekai.Data.Repositories;
 public interface IShortUrlRepository
 {
     Task<ShortUrl?> GetByCodeAsync(string code);
+    Task<List<ShortUrl>> GetAllAsync(long userId);
     Task<long> CreateAsync(ShortUrl shortUrl);
     Task DeleteAsync(string code);
     Task RecordClickAsync(string code, DateTime occurredOn);
@@ -14,6 +15,13 @@ public interface IShortUrlRepository
 
 public class ShortUrlRepository(NpgsqlDataSource dataSource) : IShortUrlRepository
 {
+    public async Task<List<ShortUrl>> GetAllAsync(long userId)
+    {
+        await using var conn = await dataSource.OpenConnectionAsync();
+        var urls = await conn.QueryAsync<ShortUrl>("SELECT * FROM short_urls WHERE user_id = @userId;", new { userId });
+        return [.. urls];
+    }
+
     public async Task<long> CreateAsync(ShortUrl shortUrl)
     {
         await using var conn = await dataSource.OpenConnectionAsync();
