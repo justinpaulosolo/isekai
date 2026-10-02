@@ -1,8 +1,5 @@
-import {
-  createFileRoute,
-  useRouterState,
-  useNavigate,
-} from '@tanstack/react-router';
+import { createFileRoute, useNavigate, useRouterState } from '@tanstack/react-router';
+import { useEffect } from 'react';
 
 export const Route = createFileRoute('/shortener')({
   component: Shortener,
@@ -14,18 +11,17 @@ function Shortener() {
     select: (state) => state.location.state,
   });
 
-  if (!apiData) {
-    navigate({ to: '/' });
-  }
-
-  console.log(apiData);
+  useEffect(() => {
+    if (!apiData) {
+      void navigate({ to: '/' });
+    }
+  }, [apiData, navigate]);
 
   return (
     <>
       <h1>Your shortened URL </h1>
       <p>
-        Copy the short link and share it in messages, texts, posts, websites and
-        other locations.
+        Copy the short link and share it in messages, texts, posts, websites and other locations.
       </p>
     </>
   );

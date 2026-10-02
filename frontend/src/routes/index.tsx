@@ -1,12 +1,6 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router';
+import { ChartNoAxesCombined, Link2, Scissors, Shield, Zap } from 'lucide-react';
 import { useState } from 'react';
-import {
-  Link2,
-  Scissors,
-  Shield,
-  ChartNoAxesCombined,
-  Zap,
-} from 'lucide-react';
 
 export const Route = createFileRoute('/')({
   component: Index,
@@ -17,12 +11,12 @@ function Index() {
   const navigate = useNavigate();
 
   const onShortenClick = async () => {
-    const payload = {
+    const payload: { url: string } = {
       url: longUrl,
     };
 
     try {
-      const res = await fetch('/api/shorturls', {
+      const res: Response = await fetch('/api/shorturls', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,10 +28,9 @@ function Index() {
         throw new Error(`HTTP error! Status: ${res.status}`);
       }
 
-      const result = await res.json();
-      // console.log('Success:', result);
+      const result: Record<string, unknown> = (await res.json()) as Record<string, unknown>;
 
-      navigate({ to: '/shortener', state: { ...result } });
+      void navigate({ to: '/shortener', state: { ...result } });
     } catch (error) {
       console.error(error);
     }
@@ -61,8 +54,7 @@ function Index() {
       </h1>
 
       <p className="text-xl text-slate-400 mt-5">
-        Fast, secure, and modern link shortening with real-time analytics and
-        instant edge routing.
+        Fast, secure, and modern link shortening with real-time analytics and instant edge routing.
       </p>
 
       {/* Need to change to url */}
@@ -81,7 +73,7 @@ function Index() {
 
         <button
           className="btn bg-indigo-500 hover:bg-indigo-300 text-indigo-950 ms-1 p-3 mt-2 lg:mt-0"
-          onClick={onShortenClick}
+          onClick={() => void onShortenClick()}
         >
           <Scissors />
           Shorten URL

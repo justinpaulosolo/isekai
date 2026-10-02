@@ -13,23 +13,45 @@ export function Footer() {
       </aside>
       <nav>
         <h6 className="font-bold uppercase text-white">Products</h6>
-        <a className="nav-link">Link Engine</a>
-        <a className="nav-link">Live Telemetry</a>
-        <a className="nav-link">Enterprise</a>
-        <a className="nav-link">QR Engine</a>
+        <button type="button" className="nav-link">
+          Link Engine
+        </button>
+        <button type="button" className="nav-link">
+          Live Telemetry
+        </button>
+        <button type="button" className="nav-link">
+          Enterprise
+        </button>
+        <button type="button" className="nav-link">
+          QR Engine
+        </button>
       </nav>
       <nav>
         <h6 className="font-bold uppercase">Developers</h6>
-        <a className="nav-link">REST API</a>
-        <a className="nav-link">SDK</a>
-        <a className="nav-link">GitHub Repo</a>
-        <a className="nav-link">Docs</a>
+        <button type="button" className="nav-link">
+          REST API
+        </button>
+        <button type="button" className="nav-link">
+          SDK
+        </button>
+        <button type="button" className="nav-link">
+          GitHub Repo
+        </button>
+        <button type="button" className="nav-link">
+          Docs
+        </button>
       </nav>
       <nav>
         <h6 className="font-bold uppercase text-white">Company</h6>
-        <a className="nav-link">About Us</a>
-        <a className="nav-link">Contact</a>
-        <a className="nav-link">Jobs</a>
+        <button type="button" className="nav-link">
+          About Us
+        </button>
+        <button type="button" className="nav-link">
+          Contact
+        </button>
+        <button type="button" className="nav-link">
+          Jobs
+        </button>
       </nav>
     </footer>
   );
