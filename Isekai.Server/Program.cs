@@ -67,21 +67,23 @@ builder.Services.AddAuthentication(options =>
     {
         var provider = context.Scheme.Name;  // "Google", "GitHub", ...
         var subject  = context.Principal!.FindFirstValue(ClaimTypes.NameIdentifier)!;
-        var name     = context.Principal.FindFirstValue(ClaimTypes.Name);
+        var name = context.Principal.FindFirstValue(ClaimTypes.Name);
         var email    = context.Principal.FindFirstValue(ClaimTypes.Email);
+        var picture = context.Principal.FindFirstValue("picture");
 
         var svc = context.HttpContext.RequestServices.GetRequiredService<IAccountService>();
         var userId = await svc.GetOrCreateUserAsync(provider.ToLowerInvariant(), subject, name, email);
 
-        // Replace the principal with one carrying YOUR id
-        var identity = new ClaimsIdentity(
-            new[] { new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
-                new Claim(ClaimTypes.Name, name ?? ""),
-                new Claim(ClaimTypes.Email, email ?? ""),
-            }, 
-            CookieAuthenticationDefaults.AuthenticationScheme);
-
-        context.Principal = new ClaimsPrincipal(identity);
+        var claims = new List<Claim>
+        {
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+            new Claim(ClaimTypes.Name, name ?? ""),
+            new Claim(ClaimTypes.Email, email ?? ""),
+            new Claim("picture", picture ?? ""),
+        };
+        
+        context.Principal = new ClaimsPrincipal(
+            new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme));
     };
 });
 
