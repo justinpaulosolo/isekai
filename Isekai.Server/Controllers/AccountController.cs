@@ -42,7 +42,8 @@ public class AccountController : ControllerBase
         {
             id = User.FindFirstValue(ClaimTypes.NameIdentifier),
             name = User.FindFirstValue(ClaimTypes.Name),
-            email = User.FindFirstValue(ClaimTypes.Email)
+            email = User.FindFirstValue(ClaimTypes.Email),
+            picture = User.FindFirstValue("picture")
         });
     }
 }
