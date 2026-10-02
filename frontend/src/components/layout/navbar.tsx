@@ -55,7 +55,7 @@ export function Navbar() {
 
         <Link
           to="/"
-          className="text-xl flex items-center text-white whitespace-nowrap me-3"
+          className="hidden lg:flex text-xl items-center text-white whitespace-nowrap me-3"
         >
           <img src={logo} alt="" className="w-8 me-1" />
           SnapLink
