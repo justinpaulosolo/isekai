@@ -53,9 +53,7 @@ export function Navbar() {
               <a>GitHub</a>
             </li>
 
-            <li>
-              <GoogleSignInBtn login={login} />
-            </li>
+            <li>{!user && <GoogleSignInBtn login={login} />}</li>
           </ul>
         </div>
 

@@ -88,14 +88,13 @@ function Index() {
         </button>
       </div>
 
-      <div className="bg-base-200 border border-zinc-800/80 rounded-sm p-3 mt-5 lg:flex gap-4">
+      {/* Cards */}
+      <div className="bg-base-200 border border-zinc-800/80 rounded-sm p-3 mt-5 lg:flex gap-4 justify-center">
         <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-white/8 bg-white/2 lg:mt-0 mt-2">
-          {/* Icon container */}
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-500/10 text-sky-400">
             <Zap className="w-4 h-4" />
           </div>
 
-          {/* Typography */}
           <div>
             <h3 className="text-sm font-semibold text-slate-100 leading-5 text-left">
               &lt;12ms Edge Redirects
@@ -107,12 +106,9 @@ function Index() {
         </div>
 
         <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-white/8 bg-white/2 lg:mt-0 mt-2">
-          {/* Icon container */}
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400">
             <Shield className="w-4 h-4" />
           </div>
-
-          {/* Typography */}
           <div className="">
             <h3 className="text-sm font-semibold text-slate-100 leading-5 text-left">
               Free SSL & Bot Shield
@@ -124,12 +120,9 @@ function Index() {
         </div>
 
         <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-white/8 bg-white/2 lg:mt-0 mt-2">
-          {/* Icon container */}
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-500/10 text-sky-400">
             <ChartNoAxesCombined className="w-4 h-4" />
           </div>
-
-          {/* Typography */}
           <div>
             <h3 className="text-sm font-semibold text-slate-100 leading-5 text-left">
               Live Telemetry
