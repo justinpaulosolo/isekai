@@ -1,8 +1,8 @@
-import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
-const target = process.env.SERVER_HTTP || process.env.SERVER_HTTPS;
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+const target: string | undefined = process.env.SERVER_HTTP ?? process.env.SERVER_HTTPS;
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
@@ -14,10 +14,10 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
-    port: parseInt(process.env.PORT ?? '5173'),     // keep in sync with AppHost + Google console
+    port: parseInt(process.env.PORT ?? '5173'), // keep in sync with AppHost + Google console
     strictPort: true,
     proxy: {
-      '/api':           { target, secure: false, xfwd: true }, // no changeOrigin
+      '/api': { target, secure: false, xfwd: true }, // no changeOrigin
       '/signin-google': { target, secure: false, xfwd: true },
     },
   },

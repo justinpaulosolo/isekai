@@ -34,33 +34,30 @@ export function Navbar() {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow"
           >
             <li>
-              <a>Features</a>
+              <button type="button">Features</button>
             </li>
 
             <li>
-              <a>Analytics</a>
+              <button type="button">Analytics</button>
             </li>
 
             <li>
-              <a>Pricing</a>
+              <button type="button">Pricing</button>
             </li>
 
             <li>
-              <a>API</a>
+              <button type="button">API</button>
             </li>
 
             <li>
-              <a>GitHub</a>
+              <button type="button">GitHub</button>
             </li>
 
             <li>{!user && <GoogleSignInBtn login={login} />}</li>
           </ul>
         </div>
 
-        <Link
-          to="/"
-          className="flex text-xl items-center text-white whitespace-nowrap me-3"
-        >
+        <Link to="/" className="flex text-xl items-center text-white whitespace-nowrap me-3">
           <img src={logo} alt="" className="w-8 me-1" />
           SnapLink
         </Link>
@@ -112,11 +109,7 @@ export function Navbar() {
         ) : user ? (
           <div className="flex gap-2">
             <div className="dropdown dropdown-end">
-              <div
-                tabIndex={0}
-                role="button"
-                className="btn btn-ghost btn-circle avatar"
-              >
+              <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                 <div className="w-10 rounded-full">
                   <img
                     alt="Tailwind CSS Navbar component"
@@ -135,7 +128,9 @@ export function Navbar() {
                   </Link>
                 </li>
                 <li>
-                  <a onClick={logout}>Logout</a>
+                  <button type="button" onClick={() => void logout()}>
+                    Logout
+                  </button>
                 </li>
               </ul>
             </div>
