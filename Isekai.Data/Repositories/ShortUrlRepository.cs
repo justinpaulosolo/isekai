@@ -31,8 +31,8 @@ public class ShortUrlRepository(NpgsqlDataSource dataSource) : IShortUrlReposito
         // A placeholder outside the Base62 alphabet satisfies the constraint until the id is known.
         var id = await conn.QuerySingleAsync<long>(
             """
-            INSERT INTO short_urls (code, long_url, created_at, title)
-            VALUES (@Code, @LongUrl, @CreatedAt, @Title)
+            INSERT INTO short_urls (code, long_url, created_at, title, user_id)
+            VALUES (@Code, @LongUrl, @CreatedAt, @Title, @UserId)
             RETURNING id
             """,
             new
@@ -40,7 +40,8 @@ public class ShortUrlRepository(NpgsqlDataSource dataSource) : IShortUrlReposito
                 Code = NewPlaceholderCode(),
                 shortUrl.LongUrl,
                 shortUrl.CreatedAt,
-                shortUrl.Title
+                shortUrl.Title,
+                shortUrl.UserId
             },
             tx);
 

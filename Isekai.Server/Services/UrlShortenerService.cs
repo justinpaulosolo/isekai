@@ -11,13 +11,14 @@ namespace Isekai.Server.Services;
 public class UrlShortenerService(IShortUrlRepository repository, IConnectionMultiplexer connectionMux, IConnection connection)
 {
 
-    public async Task<string> ShortenUrl(string url, string? title = null)
+    public async Task<string> ShortenUrl(string url, string? title = null, long? userId = null)
     {
         var id = await repository.CreateAsync(new ShortUrl
         {
             LongUrl = url,
             CreatedAt = DateTime.UtcNow,
-            Title = string.IsNullOrWhiteSpace(title) ? null : title.Trim()
+            Title = string.IsNullOrWhiteSpace(title) ? null : title.Trim(),
+            UserId = userId
         });
         return Base62.Encode(id);
     }
