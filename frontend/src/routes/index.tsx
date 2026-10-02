@@ -46,7 +46,7 @@ function Index() {
   };
 
   return (
-    <div className="w-2/5 mx-auto text-center mt-10">
+    <div className="w-4/5 lg:w-2/5 mx-auto text-center mt-10">
       <div className="inline-flex items-center gap-2 px-3 py-1 bg-base-300 text-sky-400  border border-slate-50/20 rounded-full backdrop-blur-sm font-mono">
         <Link2 className="w-3.5 h-3.5 text-sky-400" />
         Modern &amp; Blazing Fast Link Shortener
@@ -66,7 +66,7 @@ function Index() {
       </p>
 
       {/* Need to change to url */}
-      <div className="bg-base-200 border border-zinc-800/80 rounded-sm p-3 mt-10 flex">
+      <div className="bg-base-200 border border-zinc-800/80 rounded-sm p-3 mt-10 lg:flex">
         <label className="input w-full bg-base-400 border-slate-700 outline-none focus-within:outline-none focus-within:ring-0 focus-within:bg-base-300 transition-colors">
           <Link2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
           <input
@@ -80,7 +80,7 @@ function Index() {
         </label>
 
         <button
-          className="btn bg-indigo-500 hover:bg-indigo-300 text-indigo-950 ms-1 p-3"
+          className="btn bg-indigo-500 hover:bg-indigo-300 text-indigo-950 ms-1 p-3 mt-2 lg:mt-0"
           onClick={onShortenClick}
         >
           <Scissors />
@@ -88,8 +88,8 @@ function Index() {
         </button>
       </div>
 
-      <div className="bg-base-200 border border-zinc-800/80 rounded-sm p-3 mt-5 flex gap-4">
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-white/8 bg-white/2">
+      <div className="bg-base-200 border border-zinc-800/80 rounded-sm p-3 mt-5 lg:flex gap-4">
+        <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-white/8 bg-white/2 lg:mt-0 mt-2">
           {/* Icon container */}
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-500/10 text-sky-400">
             <Zap className="w-4 h-4" />
@@ -106,7 +106,7 @@ function Index() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-white/8 bg-white/2">
+        <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-white/8 bg-white/2 lg:mt-0 mt-2">
           {/* Icon container */}
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400">
             <Shield className="w-4 h-4" />
@@ -123,7 +123,7 @@ function Index() {
           </div>
         </div>
 
-        <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-white/8 bg-white/2">
+        <div className="flex items-center gap-3 px-4 py-3 rounded-xl border border-white/8 bg-white/2 lg:mt-0 mt-2">
           {/* Icon container */}
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-indigo-500/10 text-sky-400">
             <ChartNoAxesCombined className="w-4 h-4" />
