@@ -7,4 +7,5 @@ public class ShortUrl
     public string? Title { get; set; }
     public long ClickCount { get; set; }
     public DateTime? LastClickedAt { get; set; }
+    public long? UserId { get; set; }
 }

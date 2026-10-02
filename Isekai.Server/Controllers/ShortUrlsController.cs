@@ -14,7 +14,10 @@ public class ShortUrlsController(UrlShortenerService urlShortenerService) : Cont
     [HttpPost]
     public async Task<IActionResult> CreateShortUrl([FromBody] ShortenRequest shortenRequest)
     {
-        var code = await urlShortenerService.ShortenUrl(shortenRequest.Url, shortenRequest.Title);
+        var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        long? userId = long.TryParse(userIdClaim, out var id) ? id : null;
+        var code = await urlShortenerService.ShortenUrl(shortenRequest.Url, shortenRequest.Title, userId);
         return Ok(new ShortenResponse(code, $"{Request.Scheme}://{Request.Host}/{code}"));
     }
 
