@@ -4,7 +4,7 @@ import logo from '../../assets/screen.png';
 
 export function Navbar() {
   return (
-    <div className="navbar bg-base-100 backdrop-blur-md backdrop-filter border-b border-zinc-800/80 px-10">
+    <div className="navbar relative z-50 bg-base-100 backdrop-blur-md backdrop-filter border-b border-zinc-800/80 px-10">
       <div className="navbar-start">
         <div className="dropdown">
           <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -27,7 +27,7 @@ export function Navbar() {
           </div>
           <ul
             tabIndex={-1}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow"
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow"
           >
             <li>
               <a>Features</a>
@@ -51,11 +51,15 @@ export function Navbar() {
           </ul>
         </div>
 
-        <Link to="/" className="text-xl flex me-2 text-white">
+        <Link
+          to="/"
+          className="text-xl flex items-center text-white whitespace-nowrap me-3"
+        >
           <img src={logo} alt="" className="w-8 me-1" />
           SnapLink
         </Link>
-        <div className="inline-flex items-center gap-2 px-3 py-1 text-xs font-medium bg-base-300 text-sky-400 border border-slate-50/20 rounded-full backdrop-blur-sm font-mono">
+
+        <div className="hidden lg:inline-flex items-center gap-2 px-3 py-1 text-xs font-medium bg-base-300 text-sky-400 border border-slate-50/20 rounded-full backdrop-blur-sm font-mono">
           v0.0.1
         </div>
       </div>
@@ -96,7 +100,7 @@ export function Navbar() {
       </div>
 
       {/* Nav End */}
-      <div className="navbar-end gap-5">
+      <div className="navbar-end gap-5 hidden lg:flex">
         <Link to="/" className="nav-link">
           Sign In
         </Link>
