@@ -2,9 +2,11 @@ import { Link } from '@tanstack/react-router';
 
 import logo from '../../assets/screen.png';
 import { useAuth } from '../../lib/auth.ts';
+import { GoogleSignInBtn } from './google-signin.tsx';
 
 export function Navbar() {
   const { user, isLoading, login, logout } = useAuth();
+
   return (
     <div className="navbar relative z-50 bg-base-100 backdrop-blur-md backdrop-filter border-b border-zinc-800/80 px-10">
       <div className="navbar-start">
@@ -50,12 +52,16 @@ export function Navbar() {
             <li>
               <a>GitHub</a>
             </li>
+
+            <li>
+              <GoogleSignInBtn login={login} />
+            </li>
           </ul>
         </div>
 
         <Link
           to="/"
-          className="hidden lg:flex text-xl items-center text-white whitespace-nowrap me-3"
+          className="flex text-xl items-center text-white whitespace-nowrap me-3"
         >
           <img src={logo} alt="" className="w-8 me-1" />
           SnapLink
@@ -137,39 +143,7 @@ export function Navbar() {
             </div>
           </div>
         ) : (
-          <button
-            onClick={() => login()}
-            className="btn bg-white text-black border-[#e5e5e5]"
-          >
-            <svg
-              aria-label="Google logo"
-              width="16"
-              height="16"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 512 512"
-            >
-              <g>
-                <path d="m0 0H512V512H0" fill="#fff"></path>
-                <path
-                  fill="#34a853"
-                  d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
-                ></path>
-                <path
-                  fill="#4285f4"
-                  d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-                ></path>
-                <path
-                  fill="#fbbc02"
-                  d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
-                ></path>
-                <path
-                  fill="#ea4335"
-                  d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-                ></path>
-              </g>
-            </svg>
-            Login with Google
-          </button>
+          <GoogleSignInBtn login={login} className="hidden lg:flex" />
         )}
       </div>
     </div>
