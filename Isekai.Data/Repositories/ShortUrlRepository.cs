@@ -9,7 +9,7 @@ public interface IShortUrlRepository
     Task<ShortUrl?> GetByCodeAsync(string code);
     Task<List<ShortUrl>> GetAllAsync(long userId);
     Task<long> CreateAsync(ShortUrl shortUrl);
-    Task DeleteAsync(string code);
+    Task<bool> DeleteAsync(string code, long userId);
     Task RecordClickAsync(string code, DateTime occurredOn);
 }
 
@@ -70,13 +70,14 @@ public class ShortUrlRepository(NpgsqlDataSource dataSource) : IShortUrlReposito
             new { Code = code });
     }
 
-    public async Task DeleteAsync(string code)
+    public async Task<bool> DeleteAsync(string code, long userId)
     {
         await using var conn = await dataSource.OpenConnectionAsync();
-        await conn.ExecuteAsync(
-            "DELETE FROM short_urls WHERE code = @Code",
-            new { Code = code }
+        var rows = await conn.ExecuteAsync(
+            "DELETE FROM short_urls WHERE code = @Code and user_id = @UserId",
+            new { Code = code, UserId = userId }
             );
+        return rows > 0;
     }
 
     public async Task RecordClickAsync (string code, DateTime occurredOn)

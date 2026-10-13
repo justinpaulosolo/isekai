@@ -26,19 +26,19 @@ public class ShortUrlsController(UrlShortenerService urlShortenerService) : Cont
     public async Task<IActionResult> GetAllShortUrls()
     {
         var id = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (long.TryParse(id, out var userId))
-        {
-            // Conversion succeeded, 'result' contains the long value
-            var urls = await urlShortenerService.GetAllShortUrls(userId);
-            return Ok(urls);
-        }
-        return BadRequest();
+        if (!long.TryParse(id, out var userId)) return BadRequest();
+        // Conversion succeeded, 'result' contains the long value
+        var urls = await urlShortenerService.GetAllShortUrls(userId);
+        return Ok(urls);
     }
 
+    [Authorize]
     [HttpDelete("{code}")]
     public async Task<IActionResult> DeleteShortUrl(string code)
     {
-        await urlShortenerService.DeleteAsync(code);
-        return NoContent();
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!long.TryParse(userId, out var id)) return NoContent();
+        var deleted = await urlShortenerService.DeleteAsync(code, id);
+        return Ok(deleted);
     }
 }
