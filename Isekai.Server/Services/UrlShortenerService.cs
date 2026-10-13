@@ -100,11 +100,13 @@ public class UrlShortenerService(IShortUrlRepository repository, IConnectionMult
         return fallback?.LongUrl;
     }
     
-    public async Task DeleteAsync(string code)
+    public async Task<bool> DeleteAsync(string code, long userId)
     {
-        await repository.DeleteAsync(code);
+        var deleted = await repository.DeleteAsync(code, userId);
+        if (!deleted) return deleted;
         var db = connectionMux.GetDatabase();
-        await db.KeyDeleteAsync($"url:{code}");
+        await db.KeyDeleteAsync(code);
+        return deleted;
     }
 
     public async Task<List<ShortUrl>> GetAllShortUrls(long userId)
