@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using DbUp;
 using Isekai.Data.Repositories;
+using Isekai.Server;
 using Isekai.Server.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -103,6 +104,9 @@ builder.Services.AddSingleton<IShortUrlRepository, ShortUrlRepository>();
 builder.Services.AddSingleton<IAccountRepository, AccountRepository>();
 builder.Services.AddSingleton<UrlShortenerService>();
 builder.Services.AddSingleton<IAccountService, AccountService>();
+builder.Services.AddSingleton<ClickBuffer>();
+
+builder.Services.AddHostedService<ClickPublisher>();
 
 var app = builder.Build();
 

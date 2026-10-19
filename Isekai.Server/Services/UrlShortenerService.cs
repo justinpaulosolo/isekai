@@ -1,14 +1,11 @@
-﻿using System.Text;
-using System.Text.Json;
-using Isekai.Data;
+﻿using Isekai.Data;
 using Isekai.Data.Repositories;
 using Isekai.Server.Models;
-using RabbitMQ.Client;
 using StackExchange.Redis;
 
 namespace Isekai.Server.Services;
 
-public class UrlShortenerService(IShortUrlRepository repository, IConnectionMultiplexer connectionMux, IConnection connection)
+public class UrlShortenerService(IShortUrlRepository repository, IConnectionMultiplexer connectionMux, ClickBuffer clicks)
 {
 
     public async Task<string> ShortenUrl(string url, string? title = null, long? userId = null)
@@ -25,38 +22,30 @@ public class UrlShortenerService(IShortUrlRepository repository, IConnectionMult
 
     public async Task<string?> ResolveAsync(string code)
     {
-        await using var channel = await connection.CreateChannelAsync();
-        await channel.QueueDeclareAsync(
-            queue: "click",
-            durable: true,
-            exclusive: false,
-            autoDelete: false);
-        var eventId = Guid.NewGuid().ToString("N");
-        
-        var json = JsonSerializer.Serialize(new
-        {
-            eventId,
-            code,
-            occurredOn = DateTime.UtcNow
-        });
-        
-        var body = Encoding.UTF8.GetBytes(json);
-        var props = new BasicProperties
-        {
-            ContentType = "application/json",
-            DeliveryMode = DeliveryModes.Persistent,
-            MessageId = eventId,
-        };
-        
-        await channel.BasicPublishAsync(
-            exchange:"",
-            routingKey: "click",
-            mandatory: false,
-            basicProperties: props,
-            body: body);
-        
+        var url = await GetUrlAsync(code);
+        if (url is not null)
+            clicks.Record(code);
+        return url;
+    }
+    
+    public async Task<bool> DeleteAsync(string code, long userId)
+    {
+        var deleted = await repository.DeleteAsync(code, userId);
+        if (!deleted) return deleted;
         var db = connectionMux.GetDatabase();
-        var cacheKey = $"url:{code}";
+        await db.KeyDeleteAsync(CacheKey(code));
+        return deleted;
+    }
+
+    public async Task<List<ShortUrl>> GetAllShortUrls(long userId)
+    {
+        return [.. await repository.GetAllAsync(userId)];
+    }
+
+    private async Task<string?> GetUrlAsync(string code)
+    {
+        var db = connectionMux.GetDatabase();
+        var cacheKey = CacheKey(code);
         var lockKey = $"lock:url:{code}";
         
         var cached = await db.StringGetAsync(cacheKey);
@@ -100,17 +89,5 @@ public class UrlShortenerService(IShortUrlRepository repository, IConnectionMult
         return fallback?.LongUrl;
     }
     
-    public async Task<bool> DeleteAsync(string code, long userId)
-    {
-        var deleted = await repository.DeleteAsync(code, userId);
-        if (!deleted) return deleted;
-        var db = connectionMux.GetDatabase();
-        await db.KeyDeleteAsync(code);
-        return deleted;
-    }
-
-    public async Task<List<ShortUrl>> GetAllShortUrls(long userId)
-    {
-        return [.. await repository.GetAllAsync(userId)];
-    }
+    private static string CacheKey(string code) => $"url:{code}";
 }
